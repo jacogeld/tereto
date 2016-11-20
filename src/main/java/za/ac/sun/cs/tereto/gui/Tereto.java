@@ -58,12 +58,12 @@ public class Tereto extends Application {
 	}
 
 	private HBox makeDomainExpertPane() {
-		HBox p = new HBox(5);
-		p.setStyle("-fx-background-color: #336699;");
-		p.setPadding(new Insets(10, 5, 10, 5));
-		p.setAlignment(Pos.CENTER_LEFT);
-		Text t = new Text("Domain:");
-		t.setFill(Color.WHITE);
+		HBox domainExpertPane = new HBox(5);
+		domainExpertPane.setStyle("-fx-background-color: #336699;");
+		domainExpertPane.setPadding(new Insets(10, 5, 10, 5));
+		domainExpertPane.setAlignment(Pos.CENTER_LEFT);
+		Text title = new Text("Domain:");
+		title.setFill(Color.WHITE);
 		domainExperts.setCellFactory(param -> new ListCell<DomainExpert>() {
 			@Override
 			protected void updateItem(DomainExpert item, boolean empty) {
@@ -84,47 +84,51 @@ public class Tereto extends Application {
 				}
 			}
 		});
-		p.getChildren().addAll(t, domainExperts);
-		return p;
+		domainExpertPane.getChildren().addAll(title, domainExperts);
+		return domainExpertPane;
 	}
 
 	private HBox makeControlPane() {
-		HBox p = new HBox(10);
+		HBox controlPane = new HBox(10);
 		logger.fine("creating control pane");
-		p.setPadding(new Insets(15, 12, 15, 12));
-		p.setStyle("-fx-background-color: #336699;");
-		Region s = new Region();
-		HBox.setHgrow(s, Priority.ALWAYS);
-		Button r = new Button("Reduce");
+		controlPane.setPadding(new Insets(15, 12, 15, 12));
+		controlPane.setStyle("-fx-background-color: #336699;");
+		Region spacer = new Region();
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		Button reduceButton = new Button("Reduce");
 		//			BooleanBinding p = Bindings.isNull(teretoEngine.getProgram());
 		//			BooleanBinding i = Bindings.isNull(teretoEngine.getInput());
 		//			reduce.setOnAction(e -> teretoEngine.reduce());
 		//			reduce.disableProperty().bind(Bindings.or(p, i));
-		Button q = new Button("Quit");
-		q.setOnAction(e -> Platform.exit());
-		p.getChildren().addAll(r, s, q);
-		return p;
+		Button quitButton = new Button("Quit");
+		quitButton.setOnAction(e -> Platform.exit());
+		controlPane.getChildren().addAll(reduceButton, spacer, quitButton);
+		return controlPane;
 	}
 
 	private TabPane makeTabPane() {
-		TabPane p = new TabPane();
+		TabPane tabPane = new TabPane();
 		logger.fine("Creating tabbed pane");
-		Tab t = new Tab();
-		t.setText("Log");
-		t.setClosable(false);
-		LogView l = new LogView(root);
-		ChoiceBox<LogLevel> f = new ChoiceBox<>(FXCollections.observableArrayList(LogLevel.LEVELS));
-		f.getSelectionModel().select(LogLevel.DEBUG);
-		f.setStyle("-fx-font-size:80%;");
-		l.filterLevelProperty().bind(f.getSelectionModel().selectedItemProperty());
-		ToggleButton b = new ToggleButton("Pause");
-		b.setStyle("-fx-font-size:80%;");
-		l.pausedProperty().bind(b.selectedProperty());
-		HBox h = new HBox(5, f, b);
-		h.setPadding(new Insets(5));
-		t.setContent(new BorderPane(l, h, null, null, null));
-		p.getTabs().add(t);
-		return p;
+		tabPane.getTabs().add(makeLogTab());
+		return tabPane;
 	}
 
+	private Tab makeLogTab() {
+		Tab logTab = new Tab();
+		logTab.setText("Log");
+		logTab.setClosable(false);
+		LogView logView = new LogView(root);
+		ChoiceBox<LogLevel> levelChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(LogLevel.LEVELS));
+		levelChoiceBox.getSelectionModel().select(LogLevel.DEBUG);
+		levelChoiceBox.setStyle("-fx-font-size:80%;");
+		logView.filterLevelProperty().bind(levelChoiceBox.getSelectionModel().selectedItemProperty());
+		ToggleButton pauseButton = new ToggleButton("Pause");
+		pauseButton.setStyle("-fx-font-size:80%;");
+		logView.pausedProperty().bind(pauseButton.selectedProperty());
+		HBox buttonPane = new HBox(5, levelChoiceBox, pauseButton);
+		buttonPane.setPadding(new Insets(5));
+		logTab.setContent(new BorderPane(logView, buttonPane, null, null, null));
+		return logTab;
+	}
+	
 }
