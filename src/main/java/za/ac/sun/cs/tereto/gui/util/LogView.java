@@ -71,6 +71,7 @@ public class LogView extends ListView<LogRecord> {
 
 	public LogView(Logger logger) {
 		logger.addHandler(new LogHandler());
+		logger.setUseParentHandlers(false);
 		getStyleClass().add("log-view");
 		Timeline logTransfer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
 			logRecords.drainTo(logItems);
@@ -115,7 +116,7 @@ public class LogView extends ListView<LogRecord> {
 					setText(null);
 					return;
 				}
-				String context = (item.getLoggerName() == null) ? "" : "[" + item.getLoggerName() + "] ";
+				String context = (item.getLoggerName() == null) ? "" : " [" + item.getLoggerName() + "] ";
 				if (showTimestamp.get()) {
 					String timestamp = timestampFormatter.format(new Date(item.getMillis()));
 					setText(timestamp + context + item.getMessage());
@@ -145,7 +146,7 @@ public class LogView extends ListView<LogRecord> {
 
 	private final BlockingDeque<LogRecord> logRecords = new LinkedBlockingDeque<>(MAX_LOG_ENTRIES);
 	
-	private class LogHandler extends Handler {
+	public class LogHandler extends Handler {
 
 		@Override
 		public void publish(LogRecord record) {

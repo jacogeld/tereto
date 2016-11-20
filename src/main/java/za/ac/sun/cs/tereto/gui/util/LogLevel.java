@@ -18,6 +18,10 @@ public class LogLevel extends Pair<String, Level> {
 	private LogLevel(String key, Level value) {
 		super(key, value);
 	}
-	
+
+	@Override
+	public String toString() {
+		return getKey().toUpperCase();
+	}
 	
 }
