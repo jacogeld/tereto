@@ -1,4 +1,4 @@
-package main.java.za.ac.sun.cs.tereto.ga;
+package main.java.za.ac.sun.cs.tereto.engine.ga;
 
 public interface Fitness extends Comparable<Fitness> {
 

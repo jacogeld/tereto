@@ -1,4 +1,4 @@
-package main.java.za.ac.sun.cs.tereto.ga;
+package main.java.za.ac.sun.cs.tereto.engine.ga;
 
 import java.util.HashSet;
 import java.util.PriorityQueue;
